@@ -3,7 +3,7 @@
 ## **Completed**
 - [x] Day1
 - [x] Day2
-- [ ] Day3
+- [x] Day3
 - [ ] Day4
 - [ ] Day5
 - [ ] Day6
