@@ -134,5 +134,18 @@ int main() {
     std::cout << "Part 2: " << run2(input) << '\n';
 }
 
-// Part 1: 2720
-// Part 2 : 71535
+//Part 1 : 2720
+//Part 2 : 71535
+//
+//
+//Days : 0
+//Hours : 0
+//Minutes : 0
+//Seconds : 0
+//Milliseconds : 8
+//Ticks : 84291
+//TotalDays : 9.75590277777778E-08
+//TotalHours : 2.34141666666667E-06
+//TotalMinutes : 0.000140485
+//TotalSeconds : 0.0084291
+//TotalMilliseconds : 8.4291
