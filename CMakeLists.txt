@@ -23,6 +23,7 @@ add_executable (AOC2023 "AOC2023.cpp" "AOC2023.h")
 add_subdirectory(day1)
 add_subdirectory(day2)
 add_subdirectory(day3)
+add_subdirectory(day4)
 
 # if (CMAKE_VERSION VERSION_GREATER 3.12)
 #   set_property(TARGET AOC2023 PROPERTY CXX_STANDARD 20)
