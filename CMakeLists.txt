@@ -19,10 +19,6 @@ project ("AOC2023")
 # Check for cuda for day5 implementation
 find_package(CUDA)
 
-enable_language(CUDA)
-set(CMAKE_CUDA_COMPILER nvcc)
-
-
 # Add source to this project's executable.
 add_executable (AOC2023 "AOC2023.cpp" "AOC2023.h")
 
@@ -33,6 +29,8 @@ add_subdirectory(day3)
 add_subdirectory(day4)
 add_subdirectory(day5)
 if(CUDA_FOUND)
+	enable_language(CUDA)
+	set(CMAKE_CUDA_COMPILER nvcc)
   add_subdirectory(day5CUDA)
 endif(CUDA_FOUND)
 
