@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 #include <numeric>
-#include <windows.h>
 
 #define MAX_PATH 2048
 
