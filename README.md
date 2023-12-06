@@ -6,7 +6,7 @@
 - [x] Day3
 - [x] Day4
 - [x] Day5
-- [ ] Day6
+- [x] Day6
 - [ ] Day7
 - [ ] Day8
 - [ ] Day9
