@@ -46,7 +46,7 @@ auto getInput(const std::string f = "input.txt") {
     return out;
 }
 
-int calcDist(const int heldFor, const int maxT) {
+int64_t calcDist(const int64_t heldFor, const int64_t maxT) {
     return heldFor * (maxT - heldFor);
 }
 
@@ -79,12 +79,13 @@ int run2(T input) {
     r.time = std::stoll(t);
     r.dist = std::stoll(d);
 
-    std::vector<int64_t> times(r.time + 1);
-    std::iota(times.begin(), times.end(), 0);
-    std::transform(std::execution::par, times.cbegin(), times.cend(), times.begin(), [&](int64_t t) { return (t * (r.time - t)) > r.dist; });
+    int64_t sum = 0;
+    for (int64_t i = 0; i <= r.time; i++) {
+        int64_t d = calcDist(i, r.time);
+        if (d > r.dist) { sum++; }
+    }
 
-
-    return std::accumulate(times.begin(), times.end(), 0);
+    return sum;
 }
 
 
@@ -102,10 +103,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 366
-//Ticks : 3668030
-//TotalDays : 4.24540509259259E-06
-//TotalHours : 0.000101889722222222
-//TotalMinutes : 0.00611338333333333
-//TotalSeconds : 0.366803
-//TotalMilliseconds : 366.803
+//Milliseconds : 23
+//Ticks : 233864
+//TotalDays : 2.70675925925926E-07
+//TotalHours : 6.49622222222222E-06
+//TotalMinutes : 0.000389773333333333
+//TotalSeconds : 0.0233864
+//TotalMilliseconds : 23.3864
