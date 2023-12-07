@@ -34,6 +34,7 @@ if(CUDA_FOUND)
   add_subdirectory(day5CUDA)
 endif(CUDA_FOUND)
 add_subdirectory(day6)
+add_subdirectory(day7)
 
 # if (CMAKE_VERSION VERSION_GREATER 3.12)
 #   set_property(TARGET AOC2023 PROPERTY CXX_STANDARD 20)
