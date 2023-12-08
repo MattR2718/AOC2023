@@ -58,21 +58,23 @@ int64_t run2(T input) {
     }
     
     // Calculate length of all cycles, only works because cycles are contained
-    std::vector<long long> lengths;
-    for (auto& s : starts) {
+    std::vector<long long> lengths(starts.size(), 0);
+    std::iota(lengths.begin(), lengths.end(), 0);
+
+    std::for_each(std::execution::par, lengths.begin(), lengths.end(), [&](auto& len) {
+        
         long long l = 0;
         int ins = 0;
-        std::string curr = s;
-        
-        while (curr[2] != 'Z') {
-            if (instr[ins] == 'L') { curr = nodes[curr].first; }
-            else{ curr = nodes[curr].second; }
+
+        while (ats[len][2] != 'Z') {
+            if (instr[ins] == 'L') { ats[len] = nodes[ats[len]].first; }
+            else { ats[len] = nodes[ats[len]].second; }
             l++;
             ins = (ins + 1) % instr.length();
         }
+        len = l;
 
-        lengths.push_back(l);
-    }
+        });
 
     // Calculate lcm of cycle lengths
     return std::accumulate(lengths.begin(), lengths.end(), 1LL, [](auto l, auto r) { return std::lcm(l, r); });
@@ -90,7 +92,6 @@ int main() {
     std::cout << "Part 2: " << run2(input) << '\n';
 }
 
-
 //Part 1: 12083
 //Part 2: 13385272668829
 //
@@ -99,10 +100,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 22
-//Ticks : 226490
-//TotalDays : 2.62141203703704E-07
-//TotalHours : 6.29138888888889E-06
-//TotalMinutes : 0.000377483333333333
-//TotalSeconds : 0.022649
-//TotalMilliseconds : 22.649
+//Milliseconds : 15
+//Ticks : 153538
+//TotalDays : 1.77706018518519E-07
+//TotalHours : 4.26494444444444E-06
+//TotalMinutes : 0.000255896666666667
+//TotalSeconds : 0.0153538
+//TotalMilliseconds : 15.3538
