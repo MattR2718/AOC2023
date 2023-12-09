@@ -16,8 +16,19 @@ endif()
 
 project ("AOC2023")
 
+include(FetchContent)
+
 # Check for cuda for day5 implementation
 find_package(CUDA)
+
+
+# Get ctre for faster regex
+FetchContent_Declare( ctre 
+    GIT_REPOSITORY https://github.com/hanickadot/compile-time-regular-expressions
+    GIT_TAG origin/main
+    )
+FetchContent_MakeAvailable(ctre)
+
 
 # Add source to this project's executable.
 add_executable (AOC2023 "AOC2023.cpp" "AOC2023.h")
