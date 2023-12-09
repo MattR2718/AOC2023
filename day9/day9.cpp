@@ -159,6 +159,45 @@ auto runWithInputFetchingCTRE(std::string f = "input.txt") {
     std::cout << "PART 1: " << p1 << "\nPART 2: " << p2 << '\n';
 }
 
+auto runWithInputFetchSplit(std::string f = "input.txt") {
+    std::ifstream file(f);
+    std::string linetxt;
+    std::vector<std::vector<int>> out;
+
+    int p1 = 0;
+    int p2 = 0;
+
+    while (std::getline(file, linetxt)) {
+        std::vector<int> input;
+        
+        int pos = linetxt.find(" ");
+        int ipos = 0;
+        while (pos != std::string::npos) {
+            input.push_back(std::stoi(linetxt.substr(ipos, pos - ipos)));
+            //linetxt.erase(0, pos + 1);
+            ipos = pos + 1;
+            pos = linetxt.find(" ", ipos);
+        
+        }
+        input.push_back(std::stoi(linetxt.substr(ipos, pos-ipos)));
+
+        /*for (auto& n : input) { std::cout << n << '\n'; }
+        break;*/
+
+        auto num = calcDiff(input);
+        p1 += input[input.size() - 1] + num;
+
+        std::transform(std::execution::par, input.cbegin(), input.cend(), input.begin(), std::negate<int>());
+        std::reverse(input.begin(), input.end());
+
+        num = calcDiff(input);
+        p2 += -1 * (input[input.size() - 1] + num);
+
+    }
+
+    std::cout << "PART 1: " << p1 << "\nPART 2: " << p2 << '\n';
+}
+
 
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
@@ -187,22 +226,30 @@ int main() {
     end = std::chrono::high_resolution_clock::now();
     auto part2T = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    std::cout << "INPUT GOT IN: " << inputT << "\nCTRE INPUT GOT IN: " << inputCTRET << "\nPART 1 DONE IN: " << part1T << "\nPART 2 DONE IN: " << part2T << "\n";
+    std::cout << "\nINPUT GOT IN: " << inputT << "\nCTRE INPUT GOT IN: " << inputCTRET << "\nPART 1 DONE IN: " << part1T << "\nPART 2 DONE IN: " << part2T << "\n";
 
 
-    std::cout << "DOING ALL AT ONCE\n";
+    std::cout << "\nDOING ALL AT ONCE\n";
     start = std::chrono::high_resolution_clock::now();
     runWithInputFetching();
     end = std::chrono::high_resolution_clock::now();
     auto all = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "RAN IN: " << all << '\n';
 
-    std::cout << "DOING ALL AT ONCE CTRE\n";
+    std::cout << "\nDOING ALL AT ONCE CTRE\n";
     start = std::chrono::high_resolution_clock::now();
     runWithInputFetchingCTRE();
     end = std::chrono::high_resolution_clock::now();
     auto allCTRE = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "RAN IN: " << allCTRE << '\n';
+
+
+    std::cout << "\nDOING ALL AT ONCE SPLIT\n";
+    start = std::chrono::high_resolution_clock::now();
+    runWithInputFetchSplit();
+    end = std::chrono::high_resolution_clock::now();
+    auto allSplit = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "RAN IN: " << allSplit << '\n';
 }
 
 //Part 1: 1798691765
@@ -223,19 +270,27 @@ int main() {
 
 
 //Part 1: 1798691765
-//Part 2: 1104
-//INPUT GOT IN : 8197us
-//CTRE INPUT GOT IN : 734us
-//PART 1 DONE IN : 579us
-//PART 2 DONE IN : 792us
+//Part 2 : 1104
+//
+//INPUT GOT IN : 7297us
+//CTRE INPUT GOT IN : 621us
+//PART 1 DONE IN : 601us
+//PART 2 DONE IN : 772us
+//
 //DOING ALL AT ONCE
 //PART 1 : 1798691765
 //PART 2 : 1104
-//RAN IN : 8448us
+//RAN IN : 8154us
+//
 //DOING ALL AT ONCE CTRE
 //PART 1 : 1798691765
 //PART 2 : 1104
-//RAN IN : 2480us
+//RAN IN : 2035us
+//
+//DOING ALL AT ONCE SPLIT
+//PART 1 : 1798691765
+//PART 2 : 1104
+//RAN IN : 2044us
 //
 //
 //Days : 0
@@ -243,9 +298,9 @@ int main() {
 //Minutes : 0
 //Seconds : 0
 //Milliseconds : 34
-//Ticks : 348199
-//TotalDays : 4.03008101851852E-07
-//TotalHours : 9.67219444444444E-06
-//TotalMinutes : 0.000580331666666667
-//TotalSeconds : 0.0348199
-//TotalMilliseconds : 34.8199
+//Ticks : 345696
+//TotalDays : 4.00111111111111E-07
+//TotalHours : 9.60266666666667E-06
+//TotalMinutes : 0.00057616
+//TotalSeconds : 0.0345696
+//TotalMilliseconds : 34.5696
