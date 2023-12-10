@@ -48,6 +48,7 @@ add_subdirectory(day6)
 add_subdirectory(day7)
 add_subdirectory(day8)
 add_subdirectory(day9)
+add_subdirectory(day10)
 
 # if (CMAKE_VERSION VERSION_GREATER 3.12)
 #   set_property(TARGET AOC2023 PROPERTY CXX_STANDARD 20)
