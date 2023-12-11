@@ -21,6 +21,8 @@ include(FetchContent)
 # Check for cuda for day5 implementation
 find_package(CUDA)
 
+find_package(Boost REQUIRED iostreams)
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Get ctre for faster regex
 FetchContent_Declare( ctre 
