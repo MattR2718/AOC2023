@@ -39,7 +39,7 @@ auto getInput(const std::string f = "input.txt") {
         int space = linetxt.find(" ");
         r.record = linetxt.substr(0, space);
         linetxt.erase(0, space + 1);
-        std::cout << r.record << " - " << linetxt << '\n';
+        //std::cout << r.record << " - " << linetxt << '\n';
 
         for (const auto& m : ctre::search_all<"(-?\\d+)">(linetxt)) {
             r.groups.emplace_back(m.to_number<int>());
@@ -212,7 +212,7 @@ int64_t run1(T input) {
             }
         }
 
-        std::cout << v << '\n';
+        //std::cout << v << '\n';
 
         sum += v;
 
@@ -483,9 +483,9 @@ int64_t run22(T input) {
     std::map<std::tuple<std::string, std::vector<int>, bool>, int64_t> cache;
 
     for (Row& r : input) {
-        r.print();
+        //r.print();
         auto v = count(r.record, r.groups, false, cache);
-        std::cout << "VAL: " << v << '\n';
+        //std::cout << "VAL: " << v << '\n';
         sum += v;
     }
 
@@ -498,72 +498,44 @@ int main() {
     auto input = getInput();
     auto end = std::chrono::high_resolution_clock::now();
     auto inputT = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "GOT INPUT IN: " << inputT << "\n\n";
 
-    for (auto& r : input) {
+    /*for (auto& r : input) {
         r.print();
-    }
+    }*/
 
     start = std::chrono::high_resolution_clock::now();
     std::cout << "Part 1: " << run1(input) << '\n';
     end = std::chrono::high_resolution_clock::now();
     auto part1T = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "PART 1 TOOK: " << part1T << "\n\n";
     
     start = std::chrono::high_resolution_clock::now();
     std::cout << "Part 2: " << run22(input) << '\n';
     end = std::chrono::high_resolution_clock::now();
     auto part2T = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "PART 2 TOOK: " << part2T << "\n\n";
 
 }
 
-//Part 1: 1798691765
-//Part 2: 1104
+//GOT INPUT IN : 1292us
+//
+//Part 1 : 7025
+//PART 1 TOOK : 1747162us
+//
+//Part 2 : 11461095383315
+//PART 2 TOOK : 860092us
 //
 //
-//Days : 0
+//
+//Days: 0
 //Hours : 0
 //Minutes : 0
-//Seconds : 0
-//Milliseconds : 16
-//Ticks : 163453
-//TotalDays : 1.89181712962963E-07
-//TotalHours : 4.54036111111111E-06
-//TotalMinutes : 0.000272421666666667
-//TotalSeconds : 0.0163453
-//TotalMilliseconds : 16.3453
-
-
-//Part 1: 1798691765
-//Part 2 : 1104
-//
-//INPUT GOT IN : 7297us
-//CTRE INPUT GOT IN : 621us
-//PART 1 DONE IN : 601us
-//PART 2 DONE IN : 772us
-//
-//DOING ALL AT ONCE
-//PART 1 : 1798691765
-//PART 2 : 1104
-//RAN IN : 8154us
-//
-//DOING ALL AT ONCE CTRE
-//PART 1 : 1798691765
-//PART 2 : 1104
-//RAN IN : 2035us
-//
-//DOING ALL AT ONCE SPLIT
-//PART 1 : 1798691765
-//PART 2 : 1104
-//RAN IN : 2044us
-//
-//
-//Days : 0
-//Hours : 0
-//Minutes : 0
-//Seconds : 0
-//Milliseconds : 34
-//Ticks : 345696
-//TotalDays : 4.00111111111111E-07
-//TotalHours : 9.60266666666667E-06
-//TotalMinutes : 0.00057616
-//TotalSeconds : 0.0345696
-//TotalMilliseconds : 34.5696
+//Seconds : 2
+//Milliseconds : 624
+//Ticks : 26249801
+//TotalDays : 3.03817141203704E-05
+//TotalHours : 0.000729161138888889
+//TotalMinutes : 0.0437496683333333
+//TotalSeconds : 2.6249801
+//TotalMilliseconds : 2624.9801
