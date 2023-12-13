@@ -150,29 +150,38 @@ int64_t count(std::string s, std::vector<int> g, bool n, std::map<std::tuple<std
 
 template<typename T>
 int64_t run1(T input) {
-    int64_t sum = 0;
+    std::vector<int64_t> vals(input.size());
+    std::iota(vals.begin(), vals.end(), 0);
 
-    for (Row& r : input) {
+    std::for_each(std::execution::par_unseq, vals.begin(), vals.end(), [input](auto& idx) {
+        Row r = input[idx];
         std::map<std::tuple<std::string, std::vector<int>, bool>, int64_t> cache;
         auto v = count(r.record, r.groups, false, cache);
-        sum += v;
-    }
+        idx = v;
 
-    return sum;
+        });
+
+    return std::reduce(std::execution::par_unseq, vals.cbegin(), vals.cend());
+
 }
 
 
 
 template<typename T>
 int64_t run2(T input) {
-    int64_t sum = 0;
+    std::vector<int64_t> vals(input.size());
+    std::iota(vals.begin(), vals.end(), 0);
 
-    for (Row& r : input) {
+    std::for_each(std::execution::par_unseq, vals.begin(), vals.end(), [input](auto& idx) {
+        Row r = input[idx];
         std::map<std::tuple<std::string, std::vector<int>, bool>, int64_t> cache;
         auto v = count(r.record5, r.groups5, false, cache);
-        sum += v;
-    }
-    return sum;
+        idx = v;
+        
+    });
+
+    return std::reduce(std::execution::par_unseq, vals.cbegin(), vals.cend());
+
 }
 
 
@@ -203,13 +212,13 @@ int main() {
 
 }
 
-//GOT INPUT IN : 1464us
+//GOT INPUT IN : 1469us
 //
 //Part 1 : 7025
-//PART 1 TOOK : 28ms
+//PART 1 TOOK : 6ms
 //
 //Part 2 : 11461095383315
-//PART 2 TOOK : 496ms
+//PART 2 TOOK : 90ms
 //
 //
 //
@@ -217,10 +226,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 535
-//Ticks : 5356115
-//TotalDays : 6.19920717592593E-06
-//TotalHours : 0.000148780972222222
-//TotalMinutes : 0.00892685833333333
-//TotalSeconds : 0.5356115
-//TotalMilliseconds : 535.6115
+//Milliseconds : 109
+//Ticks : 1099580
+//TotalDays : 1.27266203703704E-06
+//TotalHours : 3.05438888888889E-05
+//TotalMinutes : 0.00183263333333333
+//TotalSeconds : 0.109958
+//TotalMilliseconds : 109.958
