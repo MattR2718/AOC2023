@@ -167,10 +167,11 @@ int run2(T input) {
         moveSouth(input);
         moveEast(input);
     }
-    
-    for (int x = 0; x < input.width; x++) {
-        for (int y = 0; y < input.height; y++) {
-            if (input.map[y * input.width + x] == 'O') { sum += input.height - y - 1; }
+
+    for (int i = 0; i < input.map.size(); i++) {
+        if (input.map[i] == 'O') {
+            int y = i / input.width;
+            sum += input.height - y - 1;
         }
     }
 
@@ -207,7 +208,7 @@ int main() {
 //PART 1 TOOK : 74us
 //
 //Part 2 : 99291
-//PART 2 TOOK : 46ms
+//PART 2 TOOK : 43ms
 //
 //
 //
@@ -215,10 +216,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 55
-//Ticks : 559197
-//TotalDays : 6.4721875E-07
-//TotalHours : 1.553325E-05
-//TotalMinutes : 0.000931995
-//TotalSeconds : 0.0559197
-//TotalMilliseconds : 55.9197
+//Milliseconds : 53
+//Ticks : 531869
+//TotalDays : 6.1558912037037E-07
+//TotalHours : 1.47741388888889E-05
+//TotalMinutes : 0.000886448333333333
+//TotalSeconds : 0.0531869
+//TotalMilliseconds : 53.1869
