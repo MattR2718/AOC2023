@@ -13,8 +13,8 @@
 - [x] Day10
 - [x] Day11
 - [x] Day12
-- [ ] Day13
-- [ ] Day14
+- [x] Day13
+- [x] Day14
 - [ ] Day15
 - [ ] Day16
 - [ ] Day17
