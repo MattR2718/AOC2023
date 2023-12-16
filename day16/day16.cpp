@@ -69,6 +69,10 @@ auto getInput(const std::string f = "input.txt") {
     return m;
 }
 
+bool valid(int x, int y, int mx, int my) {
+    return (x > -1) && (y > -1) && (x < mx) && (y < my);
+}
+
 template<typename T>
 int runPos(T m, std::tuple<int, int, Direction> tup) {
     auto& [x, y, dir] {tup};
@@ -81,22 +85,22 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
     
     std::vector<Beam> beams{Beam{x, y, dir}};
     std::vector<Beam> oldbeams;
-    
-    std::set<std::tuple<int, int, Direction>> history;
-    std::set<std::pair<int, int>> historyNoDir;
+
+    std::vector<uint8_t> history(m.map.size(), 0);
 
     int numInLoop = 0;
     int i = 0;
     while (beams.size()) {
         for (int bi = 0; bi < beams.size(); bi++) {
             //If seen this exact position before, exit
-            if(history.contains(std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir))){
+            if(valid(beams[bi].x, beams[bi].y, m.width, m.height) && (history[beams[bi].y * m.width + beams[bi].x] & (1 << static_cast<typename std::underlying_type<Direction>::type>(beams[bi].dir)))) {
                 beams.erase(beams.begin() + bi);
                 bi--;
             }
             else { //Otherwise work out what next position is
-                history.emplace(std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir));
-                historyNoDir.emplace(std::make_pair(beams[bi].x, beams[bi].y));
+                if (valid(beams[bi].x, beams[bi].y, m.width, m.height)) {
+                    history[beams[bi].y * m.width + beams[bi].x] += (1 << static_cast<typename std::underlying_type<Direction>::type>(beams[bi].dir));
+                }
                 switch (beams[bi].dir) {
                 case Direction::UP: {
                     if (beams[bi].y - 1 <= -1) { // At top of map
@@ -214,7 +218,7 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
         i++;
     }
 
-    return historyNoDir.size() - 1;
+    return std::ranges::count_if(history, [](const auto a) {return a > 0; });
 }
 
 template<typename T>
@@ -263,18 +267,18 @@ int main() {
     start = std::chrono::high_resolution_clock::now();
     std::cout << "Part 2: " << run2(input) << '\n';
     end = std::chrono::high_resolution_clock::now();
-    auto part2T = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    auto part2T = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "PART 2 TOOK: " << part2T << "\n\n";
 
 }
 
-//GOT INPUT IN : 159us
+//GOT INPUT IN : 183us
 //
 //Part 1 : 7482
-//PART 1 TOOK : 3899us
+//PART 1 TOOK : 128us
 //
 //Part 2 : 7896
-//PART 2 TOOK : 244ms
+//PART 2 TOOK : 6226us
 //
 //
 //
@@ -282,10 +286,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 262
-//Ticks : 2627829
-//TotalDays : 3.04146875E-06
-//TotalHours : 7.299525E-05
-//TotalMinutes : 0.004379715
-//TotalSeconds : 0.2627829
-//TotalMilliseconds : 262.7829
+//Milliseconds : 22
+//Ticks : 226777
+//TotalDays : 2.6247337962963E-07
+//TotalHours : 6.29936111111111E-06
+//TotalMinutes : 0.000377961666666667
+//TotalSeconds : 0.0226777
+//TotalMilliseconds : 22.6777
