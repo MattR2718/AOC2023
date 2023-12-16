@@ -242,7 +242,7 @@ int run2(T input) {
 
     std::vector<int> vals(starts.size());
     std::iota(vals.begin(), vals.end(), 0);
-    std::for_each(std::execution::par_unseq, vals.begin(), vals.end(), [input, starts](int& v) {
+    std::for_each(std::execution::par, vals.begin(), vals.end(), [input, starts](int& v) {
         v = runPos(input, starts[v]);
         });
     return *std::ranges::max_element(vals);    
@@ -272,24 +272,24 @@ int main() {
 
 }
 
-//GOT INPUT IN : 181us
+//GOT INPUT IN : 572us
 //
 //Part 1 : 7482
-//PART 1 TOOK : 26ms
+//PART 1 TOOK : 57ms
 //
 //Part 2 : 7896
-//PART 2 TOOK : 2981ms
+//PART 2 TOOK : 2072ms
 //
 //
 //
 //Days: 0
 //Hours : 0
 //Minutes : 0
-//Seconds : 3
-//Milliseconds : 26
-//Ticks : 30268076
-//TotalDays : 3.50324953703704E-05
-//TotalHours : 0.000840779888888889
-//TotalMinutes : 0.0504467933333333
-//TotalSeconds : 3.0268076
-//TotalMilliseconds : 3026.8076
+//Seconds : 2
+//Milliseconds : 159
+//Ticks : 21598723
+//TotalDays : 2.49985219907407E-05
+//TotalHours : 0.000599964527777778
+//TotalMinutes : 0.0359978716666667
+//TotalSeconds : 2.1598723
+//TotalMilliseconds : 2159.8723
