@@ -257,7 +257,7 @@ int main() {
     start = std::chrono::high_resolution_clock::now();
     std::cout << "Part 1: " << run1(input) << '\n';
     end = std::chrono::high_resolution_clock::now();
-    auto part1T = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    auto part1T = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "PART 1 TOOK: " << part1T << "\n\n";
     
     start = std::chrono::high_resolution_clock::now();
@@ -268,13 +268,13 @@ int main() {
 
 }
 
-//GOT INPUT IN : 492us
+//GOT INPUT IN : 159us
 //
 //Part 1 : 7482
-//PART 1 TOOK : 10ms
+//PART 1 TOOK : 3899us
 //
 //Part 2 : 7896
-//PART 2 TOOK : 257ms
+//PART 2 TOOK : 244ms
 //
 //
 //
@@ -282,10 +282,10 @@ int main() {
 //Hours : 0
 //Minutes : 0
 //Seconds : 0
-//Milliseconds : 291
-//Ticks : 2916194
-//TotalDays : 3.37522453703704E-06
-//TotalHours : 8.10053888888889E-05
-//TotalMinutes : 0.00486032333333333
-//TotalSeconds : 0.2916194
-//TotalMilliseconds : 291.6194
+//Milliseconds : 262
+//Ticks : 2627829
+//TotalDays : 3.04146875E-06
+//TotalHours : 7.299525E-05
+//TotalMinutes : 0.004379715
+//TotalSeconds : 0.2627829
+//TotalMilliseconds : 262.7829
