@@ -106,25 +106,18 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
                     if (beams[bi].y - 1 <= -1) { // At top of map
                         break;
                     }
-                    else if (m.map[(beams[bi].y - 1) * m.width + beams[bi].x] == '.') { // Position above is empty
-                        beams[bi].y--;
-                    }
-                    else if (m.map[(beams[bi].y - 1) * m.width + beams[bi].x] == '|') { //Position above is effectively empty
-                        beams[bi].y--;
-                    }
-                    else if (m.map[(beams[bi].y - 1) * m.width + beams[bi].x] == '-') { //Position above is splitter, create copy and send in opposite directions
-                        beams[bi].y--;
+                    beams[bi].y--;
+                    auto c = m.map[beams[bi].y * m.width + beams[bi].x];
+                    if (c == '-') { //Position above is splitter, create copy and send in opposite directions
                         Beam b2 = beams[bi];
                         beams[bi].dir = Direction::LEFT;
                         b2.dir = Direction::RIGHT;
                         beams.push_back(b2);
                     }
-                    else if (m.map[(beams[bi].y - 1) * m.width + beams[bi].x] == '/') { //Position above is mirror to right
-                        beams[bi].y--;
+                    else if (c == '/') { //Position above is mirror to right
                         beams[bi].dir = Direction::RIGHT;
                     }
-                    else if (m.map[(beams[bi].y - 1) * m.width + beams[bi].x] == '\\') { //Position above is mirror left
-                        beams[bi].y--;
+                    else if (c == '\\') { //Position above is mirror left
                         beams[bi].dir = Direction::LEFT;
                     }
                     break;
@@ -133,25 +126,18 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
                     if (beams[bi].x + 1 >= m.width) { //At right hand side of map
                         break;
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x + 1)] == '.') { //Right is empty
-                        beams[bi].x++;
-                    }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x + 1)] == '-') { //Right is effecitvely empty
-                        beams[bi].x++;
-                    }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x + 1)] == '|') { //Right is splitter
-                        beams[bi].x++;
+                    beams[bi].x++;
+                    auto c = m.map[beams[bi].y * m.width + beams[bi].x];
+                    if (c == '|') { //Right is splitter
                         Beam b2 = beams[bi];
                         beams[bi].dir = Direction::UP;
                         b2.dir = Direction::DOWN;
                         beams.push_back(b2);
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x + 1)] == '/') { //Right is Right Mirror
-                        beams[bi].x++;
+                    else if (c == '/') { //Right is Right Mirror
                         beams[bi].dir = Direction::UP;
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x + 1)] == '\\') { //Right is Left Mirror
-                        beams[bi].x++;
+                    else if (c == '\\') { //Right is Left Mirror
                         beams[bi].dir = Direction::DOWN;
                     }
 
@@ -161,25 +147,18 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
                     if (beams[bi].y + 1 >= m.height) { // At bottom of map
                         break;
                     }
-                    else if (m.map[(beams[bi].y + 1) * m.width + beams[bi].x] == '.') { // Position below is empty
-                        beams[bi].y++;
-                    }
-                    else if (m.map[(beams[bi].y + 1) * m.width + beams[bi].x] == '|') { //Position below is effectively empty
-                        beams[bi].y++;
-                    }
-                    else if (m.map[(beams[bi].y + 1) * m.width + beams[bi].x] == '-') { //Position below is splitter, create copy and send in opposite directions
-                        beams[bi].y++;
+                    beams[bi].y++;
+                    auto c = m.map[beams[bi].y * m.width + beams[bi].x];
+                    if (c == '-') { //Position below is splitter, create copy and send in opposite directions
                         Beam b2 = beams[bi];
                         beams[bi].dir = Direction::LEFT;
                         b2.dir = Direction::RIGHT;
                         beams.push_back(b2);
                     }
-                    else if (m.map[(beams[bi].y + 1) * m.width + beams[bi].x] == '/') { //Position below is mirror to left
-                        beams[bi].y++;
+                    else if (c == '/') { //Position below is mirror to left
                         beams[bi].dir = Direction::LEFT;
                     }
-                    else if (m.map[(beams[bi].y + 1) * m.width + beams[bi].x] == '\\') { //Position below is mirror right
-                        beams[bi].y++;
+                    else if (c == '\\') { //Position below is mirror right
                         beams[bi].dir = Direction::RIGHT;
                     }
                     break;
@@ -188,25 +167,18 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
                     if (beams[bi].x - 1 <= -1) { //At left hand side of map
                         break;
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x - 1)] == '.') { //Left is empty
-                        beams[bi].x--;
-                    }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x - 1)] == '-') { //Left is effecitvely empty
-                        beams[bi].x--;
-                    }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x - 1)] == '|') { //Left is splitter
-                        beams[bi].x--;
+                    beams[bi].x--;
+                    auto c = m.map[beams[bi].y * m.width + beams[bi].x];
+                    if (c == '|') { //Left is splitter
                         Beam b2 = beams[bi];
                         beams[bi].dir = Direction::UP;
                         b2.dir = Direction::DOWN;
                         beams.push_back(b2);
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x - 1)] == '/') { //Left is Right Mirror
-                        beams[bi].x--;
+                    else if (c == '/') { //Left is Right Mirror
                         beams[bi].dir = Direction::DOWN;
                     }
-                    else if (m.map[beams[bi].y * m.width + (beams[bi].x - 1)] == '\\') { //Left is Left Mirror
-                        beams[bi].x--;
+                    else if (c == '\\') { //Left is Left Mirror
                         beams[bi].dir = Direction::UP;
                     }
 
