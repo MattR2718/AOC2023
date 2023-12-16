@@ -82,19 +82,21 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
     std::vector<Beam> beams{Beam{x, y, dir}};
     std::vector<Beam> oldbeams;
     
-    std::vector<std::tuple<int, int, Direction>> history;
+    std::set<std::tuple<int, int, Direction>> history;
+    std::set<std::pair<int, int>> historyNoDir;
 
     int numInLoop = 0;
     int i = 0;
     while (beams.size()) {
         for (int bi = 0; bi < beams.size(); bi++) {
             //If seen this exact position before, exit
-            if (std::find(history.begin(), history.end(), std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir)) != history.end()) {
+            if(history.contains(std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir))){
                 beams.erase(beams.begin() + bi);
                 bi--;
             }
             else { //Otherwise work out what next position is
-                history.emplace_back(std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir));
+                history.emplace(std::make_tuple(beams[bi].x, beams[bi].y, beams[bi].dir));
+                historyNoDir.emplace(std::make_pair(beams[bi].x, beams[bi].y));
                 switch (beams[bi].dir) {
                 case Direction::UP: {
                     if (beams[bi].y - 1 <= -1) { // At top of map
@@ -212,13 +214,7 @@ int runPos(T m, std::tuple<int, int, Direction> tup) {
         i++;
     }
 
-    std::set<std::pair<int, int>> s;
-    for (auto& h : history) {
-        s.insert(std::make_pair(std::get<0>(h), std::get<1>(h)));
-    }
-
-    return s.size() - 1;
-
+    return historyNoDir.size() - 1;
 }
 
 template<typename T>
@@ -272,24 +268,24 @@ int main() {
 
 }
 
-//GOT INPUT IN : 572us
+//GOT INPUT IN : 492us
 //
 //Part 1 : 7482
-//PART 1 TOOK : 57ms
+//PART 1 TOOK : 10ms
 //
 //Part 2 : 7896
-//PART 2 TOOK : 2072ms
+//PART 2 TOOK : 257ms
 //
 //
 //
 //Days: 0
 //Hours : 0
 //Minutes : 0
-//Seconds : 2
-//Milliseconds : 159
-//Ticks : 21598723
-//TotalDays : 2.49985219907407E-05
-//TotalHours : 0.000599964527777778
-//TotalMinutes : 0.0359978716666667
-//TotalSeconds : 2.1598723
-//TotalMilliseconds : 2159.8723
+//Seconds : 0
+//Milliseconds : 291
+//Ticks : 2916194
+//TotalDays : 3.37522453703704E-06
+//TotalHours : 8.10053888888889E-05
+//TotalMinutes : 0.00486032333333333
+//TotalSeconds : 0.2916194
+//TotalMilliseconds : 291.6194
