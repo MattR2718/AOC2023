@@ -18,10 +18,12 @@ project ("AOC2023")
 
 include(FetchContent)
 
+#set(Boost_DEBUG on)
+
 # Check for cuda for day5 implementation
 find_package(CUDA)
 
-find_package(Boost REQUIRED iostreams)
+find_package(Boost 1.83.0 REQUIRED COMPONENTS iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Get ctre for faster regex

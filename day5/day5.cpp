@@ -9,6 +9,10 @@
 #include <set>
 #include <sstream>
 
+#include <boost/icl/interval_set.hpp>
+#include <boost/icl/interval_map.hpp>
+#include <boost/range/algorithm/copy.hpp>
+
 #define PRINT_TOTAL_SEEDS false
 #define PRINT_COUNT_100000 false
 
@@ -41,7 +45,7 @@ struct Almanac {
 };
 
 
-auto getInput(const std::string f = "input.txt") {
+auto getInput(const std::string f = "test.txt") {
     std::ifstream file(f);
     std::string linetxt;
     Almanac out;
@@ -125,6 +129,7 @@ int run2(T input) {
         int64_t range = input.seeds[i + 1];
         for (int64_t j = 0; j < range; j++) {
             int64_t loc = traverseMap(input, seed + j);
+            std::cout << loc << '\n';
             min = (loc < min) ? loc : min;
 #if PRINT_COUNT_100000
             if (++count % 100000 == 0) { std::cout << "COUNT: " << count << '\n'; }
@@ -134,12 +139,187 @@ int run2(T input) {
     return min;
 }
 
+int64_t mapValue(int64_t input, int64_t input_start, int64_t input_end, int64_t output_start, int64_t output_end) {
+    return output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start);
+}
+
+template<typename T>
+int run2Intervals(T input) {
+
+    typedef boost::icl::interval_set<int64_t> set_t;
+    typedef set_t::interval_type ival;
+
+    std::vector<std::pair<int64_t, int64_t>> seedRanges;
+    for (int i = 0; i < input.seeds.size() - 1; i+=2) {
+        seedRanges.emplace_back(std::make_pair(input.seeds[i], input.seeds[i] + input.seeds[i + 1]));
+    }
+
+    std::vector<std::string> mapNames = {"seed-to-soil map:",
+                                        "soil-to-fertilizer map:",
+                                        "fertilizer-to-water map:",
+                                        "water-to-light map:",
+                                        "light-to-temperature map:",
+                                        "temperature-to-humidity map:",
+                                        "humidity-to-location map:"};
+    /*std::vector<std::string> mapNames = { "seed-to-soil map:" };*/
+
+    for (auto& sr : seedRanges) {
+        std::cout << "================================NEW SEED RANGE==================================\n";
+        std::cout << sr.first << " " << sr.second << '\n';
+
+        boost::icl::interval_map<int64_t, std::set<std::string>> is;
+        is += std::make_pair(boost::icl::interval<int64_t>::right_open(sr.first, sr.second), std::set<std::string>{"input"});
+        
+        for (const std::string& mn : mapNames) {
+            std::cout << "INPUT MAP: \n";
+            for (auto& interval : is) {
+                std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+                for (auto& s : interval.second) {
+                    std::cout << "{" << s << "} ";
+                }
+                std::cout << '\n';
+            }
+            
+            std::cout << mn << '\n';
+            int i = 0;
+            for (const auto& [ms, ss, l] : input.maps.at(mn)) {
+                std::cout << ms << ' ' << ss << ' ' << l << '\n';
+                is += std::make_pair(boost::icl::interval<int64_t>::right_open(ss, ss + l), std::set<std::string>{"map" + std::to_string(i++)});
+            }
+
+            std::cout << "INTERVALS: \n";
+            for (auto& interval : is) {
+                std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+                for (auto& s : interval.second) {
+                    std::cout << "{" << s << "} ";
+                }
+                std::cout << '\n';
+            }
+
+            auto cleanis = is;
+            for (auto& interval : is) {
+                if (interval.second.size() < 2) {
+                    for (auto& st : interval.second) {
+                        if (st[0] == 'm') {
+                            cleanis.subtract(interval);
+                        }
+                    }
+                }
+            }
+            is = cleanis;
+
+            std::cout << "CLEANED MAP: \n";
+            for (auto& interval : is) {
+                std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+                for (auto& s : interval.second) {
+                    std::cout << "{" << s << "} ";
+                }
+                std::cout << '\n';
+            }
+
+            boost::icl::interval_map<int64_t, std::set<std::string>> ni;
+            for (auto& interval : is) {
+                if (interval.second.size() > 1) {
+                    int mapIdx = -1;
+                    for (auto& s : interval.second) {
+                        if (s[0] == 'm') { mapIdx = s[3] - '0'; }
+                    }
+                    if (mapIdx == -1) { std::cout << "ERROR WITH MAP INDEX\n"; }
+                    auto& [ms, ss, l] {input.maps.at(mn)[mapIdx]};
+                    ni += std::make_pair(boost::icl::discrete_interval<int64_t>::right_open(ss + (interval.first.lower() - ms), ss + (interval.first.upper() - ms)), std::set<std::string>{ "input" });
+                }
+                else {
+                    ni += interval;
+                }
+            }
+            is = ni;
+
+            std::cout << "OUTPUT MAP: \n";
+            for (auto& interval : is) {
+                std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+                for (auto& s : interval.second) {
+                    std::cout << "{" << s << "} ";
+                }
+                std::cout << '\n';
+            }
+
+        }
+
+        std::cout << "================================================================================\n";
+    }
+
+    return 0;
+}
 
 int main(int argc, char **argv) {
     auto input = getInput();
+    {
+        //std::cout << "Part 1: " << run1(input) << '\n';
+        std::cout << "Part 2: " << run2(input) << '\n';
 
-    std::cout << "Part 1: " << run1(input) << '\n';
-    std::cout << "Part 2: " << run2(input) << '\n';
+
+        typedef boost::icl::interval_set<int> IntSet;
+        IntSet input_range{ {79, 93} };
+        IntSet mapping_range{ {50, 98} };
+        IntSet mapped_range{ {52, 100} };
+
+        // Subtract the mapping range from the input range
+        input_range -= mapping_range;
+
+        // Add the mapped range to the input range
+        input_range += mapped_range;
+
+        // Output the resulting ranges
+        std::vector<int> output;
+        for (const auto& interval : input_range) {
+            output.push_back(interval.lower());
+            output.push_back(interval.upper());
+        }
+
+        for (int i = 0; i < output.size() - 1; i += 2) {
+            std::cout << output[i] << ", " << output[i + 1] << '\n';
+        }
+
+        boost::icl::interval_map<int, std::set<std::string>> is;
+        is += std::make_pair(boost::icl::interval<int>::right_open(79, 94), std::set<std::string>{"input"});
+        is += std::make_pair(boost::icl::interval<int>::right_open(50, 99), std::set<std::string>{"maps"});
+        std::cout << "------------------\n";
+        for (auto& interval : is) {
+            std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+            for (auto& s : interval.second) {
+                std::cout << "{" << s << "} ";
+            }
+            std::cout << '\n';
+        }
+
+        std::cout << "\n\n------------------\n";
+
+        std::cout << run2Intervals(input) << '\n';
+    }
+    std::cout << "\n\n------------------\n";
+
+
+    typedef boost::icl::interval_map<double, double> map_t;
+    typedef boost::icl::interval_map<double, double>::interval_type ival;
+
+    // Define the input range and the two mapping ranges
+    map_t input_map;
+    input_map.add(std::make_pair(ival::closed(1.0, 5.0), 1));
+
+    map_t mapping_map1;
+    mapping_map1.add(std::make_pair(ival::closed(2.0, 3.0), 2));
+
+    map_t mapping_map2;
+    mapping_map2.add(std::make_pair(ival::closed(4.0, 5.0), 3));
+
+    // Apply the mappings to the input range
+    input_map += mapping_map1;
+    input_map += mapping_map2;
+
+    // Print the resulting map
+    for (auto& element : input_map) {
+        std::cout << element.first << " -> " << element.second << "\n";
+    }
 }
 
 //Part 1: 662197086
