@@ -45,7 +45,7 @@ struct Almanac {
 };
 
 
-auto getInput(const std::string f = "test.txt") {
+auto getInput(const std::string f = "input.txt") {
     std::ifstream file(f);
     std::string linetxt;
     Almanac out;
@@ -144,8 +144,8 @@ int64_t mapValue(int64_t input, int64_t input_start, int64_t input_end, int64_t 
 }
 
 template<typename T>
-int run2Intervals(T input) {
-
+int64_t run2Intervals(T input) {
+    int64_t minOut = INT64_MAX;
     typedef boost::icl::interval_set<int64_t> set_t;
     typedef set_t::interval_type ival;
 
@@ -165,36 +165,36 @@ int run2Intervals(T input) {
 
     for (auto& sr : seedRanges) {
         std::cout << "================================NEW SEED RANGE==================================\n";
-        std::cout << sr.first << " " << sr.second << '\n';
+        //std::cout << sr.first << " " << sr.second << '\n';
 
         boost::icl::interval_map<int64_t, std::set<std::string>> is;
         is += std::make_pair(boost::icl::interval<int64_t>::right_open(sr.first, sr.second), std::set<std::string>{"input"});
         
         for (const std::string& mn : mapNames) {
-            std::cout << "INPUT MAP: \n";
+            /*std::cout << "INPUT MAP: \n";
             for (auto& interval : is) {
                 std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
                 for (auto& s : interval.second) {
                     std::cout << "{" << s << "} ";
                 }
                 std::cout << '\n';
-            }
+            }*/
             
-            std::cout << mn << '\n';
+            //std::cout << mn << '\n';
             int i = 0;
-            for (const auto& [ms, ss, l] : input.maps.at(mn)) {
-                std::cout << ms << ' ' << ss << ' ' << l << '\n';
+            for (const auto& [ss, ms, l] : input.maps.at(mn)) {
+                //std::cout << ms << ' ' << ss << ' ' << l << '\n';
                 is += std::make_pair(boost::icl::interval<int64_t>::right_open(ss, ss + l), std::set<std::string>{"map" + std::to_string(i++)});
             }
 
-            std::cout << "INTERVALS: \n";
+            /*std::cout << "INTERVALS: \n";
             for (auto& interval : is) {
                 std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
                 for (auto& s : interval.second) {
                     std::cout << "{" << s << "} ";
                 }
                 std::cout << '\n';
-            }
+            }*/
 
             auto cleanis = is;
             for (auto& interval : is) {
@@ -208,21 +208,21 @@ int run2Intervals(T input) {
             }
             is = cleanis;
 
-            std::cout << "CLEANED MAP: \n";
+            /*std::cout << "CLEANED MAP: \n";
             for (auto& interval : is) {
                 std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
                 for (auto& s : interval.second) {
                     std::cout << "{" << s << "} ";
                 }
                 std::cout << '\n';
-            }
+            }*/
 
             boost::icl::interval_map<int64_t, std::set<std::string>> ni;
             for (auto& interval : is) {
                 if (interval.second.size() > 1) {
                     int mapIdx = -1;
                     for (auto& s : interval.second) {
-                        if (s[0] == 'm') { mapIdx = s[3] - '0'; }
+                        if (s[0] == 'm') { mapIdx = std::stoi(s.substr(3, s.length() - 3)); }
                     }
                     if (mapIdx == -1) { std::cout << "ERROR WITH MAP INDEX\n"; }
                     auto& [ms, ss, l] {input.maps.at(mn)[mapIdx]};
@@ -234,28 +234,75 @@ int run2Intervals(T input) {
             }
             is = ni;
 
-            std::cout << "OUTPUT MAP: \n";
-            for (auto& interval : is) {
-                std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
-                for (auto& s : interval.second) {
-                    std::cout << "{" << s << "} ";
+            if (mn == "humidity-to-location map:") {
+                std::cout << "OUTPUT MAP: \n";
+                for (auto& interval : is) {
+                    if (interval.first.lower() < minOut) { minOut = interval.first.lower(); }
+                    std::cout << interval.first.lower() << ", " << interval.first.upper() << " -> ";
+                    for (auto& s : interval.second) {
+                        std::cout << "{" << s << "} ";
+                    }
+                    std::cout << '\n';
                 }
-                std::cout << '\n';
             }
+
 
         }
 
         std::cout << "================================================================================\n";
     }
 
-    return 0;
+    return minOut;
 }
+
+void mapVals(boost::icl::interval_set<int>& s, auto input, auto from, auto to) {
+    //s.add(input);
+    s.subtract(from);
+
+    auto inscrIn = input & from;
+
+    s.add(boost::icl::interval<int>::right_open((to.lower() - from.lower()) + inscrIn.lower(), (to.upper() - from.upper()) + inscrIn.upper()));
+}
+
+
+template<typename T>
+int run2Intervals2(T input) {
+    std::vector<std::pair<int64_t, int64_t>> seedRanges;
+    for (int i = 0; i < input.seeds.size() - 1; i += 2) {
+        seedRanges.emplace_back(std::make_pair(input.seeds[i], input.seeds[i] + input.seeds[i + 1]));
+    }
+
+    std::vector<std::string> mapNames = { "seed-to-soil map:",
+                                        "soil-to-fertilizer map:",
+                                        "fertilizer-to-water map:",
+                                        "water-to-light map:",
+                                        "light-to-temperature map:",
+                                        "temperature-to-humidity map:",
+                                        "humidity-to-location map:" };
+
+    //Loop over all map names
+    for (auto& mn : mapNames) {
+        //Loop over all mapping ranges
+        for (auto& [from, to, length] : input.maps.at(mn)) {
+
+
+
+
+        }
+    }
+
+}
+
+
 
 int main(int argc, char **argv) {
     auto input = getInput();
+
+    //input.print();
+
     {
         //std::cout << "Part 1: " << run1(input) << '\n';
-        std::cout << "Part 2: " << run2(input) << '\n';
+        //std::cout << "Part 2: " << run2(input) << '\n';
 
 
         typedef boost::icl::interval_set<int> IntSet;
@@ -320,6 +367,39 @@ int main(int argc, char **argv) {
     for (auto& element : input_map) {
         std::cout << element.first << " -> " << element.second << "\n";
     }
+
+    std::cout << "\n\n------------------\n";
+
+    boost::icl::interval_set<int> s;
+    boost::icl::interval_set<int> fi;
+    
+    auto inpt = boost::icl::interval<int>::right_open(1, 10);
+    auto fromInterval = boost::icl::interval<int>::right_open(2, 5);
+    auto toInterval = boost::icl::interval<int>::right_open(22, 25);
+
+    /*s.add(inpt);
+    s.subtract(fromInterval);
+
+    auto insctInterval = inpt & fromInterval;
+
+    for (auto& in : s) {
+        std::cout << in << '\n';
+    }
+    std::cout << '\n';
+    
+    std::cout << insctInterval << '\n';
+
+    std::cout << '\n';
+    s.add(boost::icl::interval<int>::right_open((toInterval.lower() - fromInterval.lower()) + insctInterval.lower(), (toInterval.upper() - fromInterval.upper()) + insctInterval.upper()));
+    */
+
+    s.add(inpt);
+    mapVals(s, inpt, fromInterval, toInterval);
+
+    for (auto& in : s) {
+        std::cout << in << '\n';
+    }
+
 }
 
 //Part 1: 662197086
