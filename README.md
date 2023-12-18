@@ -18,7 +18,7 @@
 - [x] Day15
 - [x] Day16
 - [ ] Day17
-- [ ] Day18
+- [x] Day18 -> p1
 - [ ] Day19
 - [ ] Day20
 - [ ] Day21
