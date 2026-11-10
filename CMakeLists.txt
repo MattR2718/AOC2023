@@ -1,10 +1,9 @@
 ﻿# CMakeList.txt : CMake project for AOC2023, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.25)
 
 # Set C++ standard to 20
-set_property(GLOBAL PROPERTY CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -21,15 +20,24 @@ include(FetchContent)
 #set(Boost_DEBUG on)
 
 # Check for cuda for day5 implementation
-find_package(CUDA)
+include(CheckLanguage)
+check_language(CUDA)
 
-find_package(Boost 1.83.0 REQUIRED COMPONENTS iostreams)
-include_directories(${Boost_INCLUDE_DIRS})
+# Fetch Boost with only the components needed
+set(BOOST_INCLUDE_LIBRARIES iostreams icl range CACHE STRING "" FORCE)
+set(BOOST_ENABLE_CMAKE ON CACHE BOOL "" FORCE)
+FetchContent_Declare(
+    Boost
+    GIT_REPOSITORY https://github.com/boostorg/boost.git
+    GIT_TAG        boost-1.85.0
+    GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(Boost)
 
 # Get ctre for faster regex
-FetchContent_Declare( ctre 
+FetchContent_Declare( ctre
     GIT_REPOSITORY https://github.com/hanickadot/compile-time-regular-expressions
-    GIT_TAG origin/main
+    GIT_TAG v3.9.0
     )
 FetchContent_MakeAvailable(ctre)
 
@@ -43,11 +51,10 @@ add_subdirectory(day2)
 add_subdirectory(day3)
 add_subdirectory(day4)
 add_subdirectory(day5)
-if(CUDA_FOUND)
-	enable_language(CUDA)
-	set(CMAKE_CUDA_COMPILER nvcc)
+if(CMAKE_CUDA_COMPILER)
+  enable_language(CUDA)
   add_subdirectory(day5CUDA)
-endif(CUDA_FOUND)
+endif()
 add_subdirectory(day6)
 add_subdirectory(day7)
 add_subdirectory(day8)
