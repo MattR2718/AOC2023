@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_executable(day17 "day17.cpp")
+add_executable(day17-2026 "day17-2026.cpp")
 
 add_custom_command(
 	TARGET day17 PRE_BUILD
