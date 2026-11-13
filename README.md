@@ -1,6 +1,7 @@
 # AOC2023
 
 ## **Completed**
+
 - [x] Day1
 - [x] Day2
 - [x] Day3
@@ -17,8 +18,8 @@
 - [x] Day14
 - [x] Day15
 - [x] Day16
-- [ ] Day17
-- [x] Day18 -> p1
+- [ ] Day17 \*
+- [x] Day18 (p2 \*)
 - [ ] Day19
 - [ ] Day20
 - [ ] Day21
@@ -26,3 +27,5 @@
 - [ ] Day23
 - [ ] Day24
 - [ ] Day25
+
+\* Completed after event
